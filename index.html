@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>J.H's Homepage</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <h1>J.H's homepage</h1>
+
+  <div class="rate-input">
+    <label for="currentRate">Current rate per gram:</label>
+    <input type="number" id="currentRate" placeholder="Enter current gold rate" oninput="updateTable()" />
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>일련번호</th>
+        <th>Type</th>
+        <th>Buying Point<br>(rate per gram)</th>
+        <th>Quantity</th>
+        <th>Total Rate<br>(Buying)</th>
+        <th>Total Rate<br>(Current)</th>
+        <th>Profit</th>
+      </tr>
+    </thead>
+    <tbody id="dataTable">
+      <!-- Table rows -->
+      <tr>
+        <td>1</td>
+        <td>On-line</td>
+        <td>167523.4</td>
+        <td>100</td>
+        <td>16752343</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Real</td>
+        <td>151200</td>
+        <td>75</td>
+        <td>11340000</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>On-line</td>
+        <td>183310</td>
+        <td>84</td>
+        <td>15398040</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>On-line</td>
+        <td>179120</td>
+        <td>11</td>
+        <td>1970320</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>On-line</td>
+        <td>202978.1</td>
+        <td>32</td>
+        <td>6495300</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>On-line</td>
+        <td>219229</td>
+        <td>123</td>
+        <td>26965167</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6" class="total-label">Profit (sum)</td>
+        <td id="totalProfit"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <script src="script.js"></script>
+</body>
+</html>
