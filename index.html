@@ -1,85 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>J.H's Home Page</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>J.H's Homepage</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <h1>J.H's Home Page</h1>
+  <h1>J.H's homepage</h1>
 
-    <div class="rate-input">
-        <label for="currentRate">current rate:</label>
-        <input type="number" id="currentRate" placeholder="Enter current rate">
-    </div>
+  <div class="rate-input">
+    <label for="currentRate">Current rate per gram:</label>
+    <input type="number" id="currentRate" placeholder="Enter current gold rate" oninput="updateTable()" />
+  </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>일련번호</th>
-                <th>type</th>
-                <th>rate per gram</th>
-                <th>quantity</th>
-                <th>total rate (at the moment)</th>
-                <th>total rate(current)</th>
-                <th>profit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td><td>On-line</td><td>167523.4</td><td>100</td><td>16752343</td>
-                <td class="total-current"></td><td class="profit"></td>
-            </tr>
-            <tr>
-                <td>2</td><td>Real</td><td>151200.0</td><td>75</td><td>11340000</td>
-                <td class="total-current"></td><td class="profit"></td>
-            </tr>
-            <tr>
-                <td>3</td><td>On-line</td><td>183310.0</td><td>84</td><td>15398040</td>
-                <td class="total-current"></td><td class="profit"></td>
-            </tr>
-            <tr>
-                <td>4</td><td>On-line</td><td>179120.0</td><td>11</td><td>1970320</td>
-                <td class="total-current"></td><td class="profit"></td>
-            </tr>
-            <tr>
-                <td>5</td><td>On-line</td><td>202978.1</td><td>32</td><td>6495300</td>
-                <td class="total-current"></td><td class="profit"></td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="6" style="text-align:right; font-weight:bold;">profit(sum)</td>
-                <td id="profitSum"></td>
-            </tr>
-        </tfoot>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>일련번호</th>
+        <th>Type</th>
+        <th>Buying Point<br>(rate per gram)</th>
+        <th>Quantity</th>
+        <th>Total Rate<br>(Buying)</th>
+        <th>Total Rate<br>(Current)</th>
+        <th>Profit</th>
+      </tr>
+    </thead>
+    <tbody id="dataTable">
+      <tr>
+        <td>1</td>
+        <td>On-line</td>
+        <td>167523.4</td>
+        <td>100</td>
+        <td>16752343</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Real</td>
+        <td>151200</td>
+        <td>75</td>
+        <td>11340000</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>On-line</td>
+        <td>183310</td>
+        <td>84</td>
+        <td>15398040</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>On-line</td>
+        <td>179120</td>
+        <td>11</td>
+        <td>1970320</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>On-line</td>
+        <td>202978.1</td>
+        <td>32</td>
+        <td>6495300</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td>On-line</td>
+        <td>219229</td>
+        <td>123</td>
+        <td>26965167</td>
+        <td class="current"></td>
+        <td class="profit"></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6" class="total-label">Profit (sum)</td>
+        <td id="totalProfit"></td>
+      </tr>
+    </tfoot>
+  </table>
 
-    <script>
-        const currentRateInput = document.getElementById('currentRate');
-        const rows = document.querySelectorAll('tbody tr');
-        const profitSumCell = document.getElementById('profitSum');
+  <script>
+    function updateTable() {
+      const rateInput = document.getElementById('currentRate');
+      const currentRate = parseFloat(rateInput.value);
+      const rows = document.querySelectorAll('#dataTable tr');
 
-        currentRateInput.addEventListener('input', () => {
-            const currentRate = parseFloat(currentRateInput.value) || 0;
-            let profitSum = 0;
+      let totalProfit = 0;
 
-            rows.forEach(row => {
-                const ratePerGram = parseFloat(row.cells[2].textContent);
-                const quantity = parseFloat(row.cells[3].textContent);
-                const totalAtMoment = parseFloat(row.cells[4].textContent);
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        const quantity = parseFloat(cells[3].textContent);
+        const buyingTotal = parseFloat(cells[4].textContent);
 
-                const totalCurrent = currentRate * quantity;
-                const profit = totalCurrent - totalAtMoment;
+        const currentCell = row.querySelector('.current');
+        const profitCell = row.querySelector('.profit');
 
-                row.querySelector('.total-current').textContent = totalCurrent.toLocaleString();
-                row.querySelector('.profit').textContent = profit.toLocaleString();
+        if (!isNaN(currentRate)) {
+          const currentTotal = currentRate * quantity;
+          const profit = currentTotal - buyingTotal;
 
-                profitSum += profit;
-            });
+          currentCell.textContent = Math.round(currentTotal).toLocaleString();
+          profitCell.textContent = Math.round(profit).toLocaleString();
 
-            profitSumCell.textContent = profitSum.toLocaleString();
-        });
-    </script>
+          totalProfit += profit;
+        } else {
+          currentCell.textContent = '';
+          profitCell.textContent = '';
+        }
+      });
+
+      document.getElementById('totalProfit').textContent =
+        !isNaN(totalProfit) ? Math.round(totalProfit).toLocaleString() : '';
+    }
+  </script>
 </body>
 </html>
