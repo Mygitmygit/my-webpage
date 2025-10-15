@@ -1,97 +1,91 @@
-<!-- 이 안에 적은 내용은 주석입니다. 브라우저에 보이지 않아요 -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>J.H's Homepage</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J.H's homepage</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>J.H's homepage</h1>
+  <h2>J.H's homepage</h2>
 
-  <div class="rate-input">
-    <label for="currentRate">Current rate per gram:</label>
-    <input type="number" id="currentRate" placeholder="Enter current gold rate" oninput="updateTable()" />
+  <div class="container">
+    <label for="currentRate">current rate per gram</label>
+    <input type="number" id="currentRate" placeholder="Enter current rate" oninput="calculateAll()">
   </div>
 
-  <table>
+  <table id="goldTable">
     <thead>
       <tr>
         <th>일련번호</th>
-        <th>Type</th>
-        <th>Buying Point<br>(rate per gram)</th>
-        <th>Quantity</th>
-        <th>Total Rate<br>(Buying)</th>
-        <th>Total Rate<br>(Current)</th>
-        <th>Profit</th>
+        <th>type</th>
+        <th colspan="3">buying point</th>
+        <th colspan="2">current point</th>
+        <th>profit</th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>rate per gram</th>
+        <th>quantity</th>
+        <th>total rate</th>
+        <th>total rate</th>
+        <th></th>
+        <th></th>
       </tr>
     </thead>
-    <tbody id="dataTable">
-      <!-- Table rows -->
+    <tbody>
       <tr>
-        <td>1</td>
-        <td>On-line</td>
-        <td>167523.4</td>
-        <td>100</td>
-        <td>16752343</td>
-        <td class="current"></td>
-        <td class="profit"></td>
+        <td>1</td><td>On-line</td><td>167523.4</td><td>100</td><td>16752343</td><td class="current"></td><td></td><td class="profit"></td>
       </tr>
       <tr>
-        <td>2</td>
-        <td>Real</td>
-        <td>151200</td>
-        <td>75</td>
-        <td>11340000</td>
-        <td class="current"></td>
-        <td class="profit"></td>
+        <td>2</td><td>Real</td><td>151200</td><td>75</td><td>11340000</td><td class="current"></td><td></td><td class="profit"></td>
       </tr>
       <tr>
-        <td>3</td>
-        <td>On-line</td>
-        <td>183310</td>
-        <td>84</td>
-        <td>15398040</td>
-        <td class="current"></td>
-        <td class="profit"></td>
+        <td>3</td><td>On-line</td><td>183310</td><td>84</td><td>15398040</td><td class="current"></td><td></td><td class="profit"></td>
       </tr>
       <tr>
-        <td>4</td>
-        <td>On-line</td>
-        <td>179120</td>
-        <td>11</td>
-        <td>1970320</td>
-        <td class="current"></td>
-        <td class="profit"></td>
+        <td>4</td><td>On-line</td><td>179120</td><td>11</td><td>1970320</td><td class="current"></td><td></td><td class="profit"></td>
       </tr>
       <tr>
-        <td>5</td>
-        <td>On-line</td>
-        <td>202978.1</td>
-        <td>32</td>
-        <td>6495300</td>
-        <td class="current"></td>
-        <td class="profit"></td>
+        <td>5</td><td>On-line</td><td>202978.1</td><td>32</td><td>6495300</td><td class="current"></td><td></td><td class="profit"></td>
       </tr>
       <tr>
-        <td>6</td>
-        <td>On-line</td>
-        <td>219229</td>
-        <td>123</td>
-        <td>26965167</td>
-        <td class="current"></td>
-        <td class="profit"></td>
+        <td>6</td><td>On-line</td><td>219229</td><td>123</td><td>26965167</td><td class="current"></td><td></td><td class="profit"></td>
       </tr>
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="6" class="total-label">Profit (sum)</td>
-        <td id="totalProfit"></td>
+        <td colspan="7" style="text-align:right;"><strong>profit(sum)</strong></td>
+        <td id="profitSum"></td>
       </tr>
     </tfoot>
   </table>
 
-  <script src="script.js"></script>
+  <script>
+    function calculateAll() {
+      const rate = parseFloat(document.getElementById("currentRate").value);
+      if (!rate) return;
+
+      let profitSum = 0;
+      const rows = document.querySelectorAll("#goldTable tbody tr");
+
+      rows.forEach(row => {
+        const buyingRate = parseFloat(row.children[2].textContent);
+        const quantity = parseFloat(row.children[3].textContent);
+        const buyingTotal = parseFloat(row.children[4].textContent);
+
+        const currentTotal = rate * quantity;
+        const profit = currentTotal - buyingTotal;
+
+        row.querySelector(".current").textContent = Math.round(currentTotal).toLocaleString();
+        row.querySelector(".profit").textContent = Math.round(profit).toLocaleString();
+
+        profitSum += profit;
+      });
+
+      document.getElementById("profitSum").textContent = Math.round(profitSum).toLocaleString();
+    }
+  </script>
 </body>
 </html>
