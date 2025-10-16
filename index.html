@@ -2,16 +2,59 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>J.H's homepage</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      text-align: center;
+      margin: 40px;
+      background-color: #fafafa;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .input-box {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+
+    table {
+      width: 80%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      font-size: 14px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    tfoot td {
+      background-color: #f9f9f9;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h2>J.H's homepage</h2>
 
-  <div class="container">
-    <label for="currentRate">current rate per gram</label>
-    <input type="number" id="currentRate" placeholder="Enter current rate" oninput="calculateAll()">
+  <div class="input-box">
+    <label for="currentRate">enter current rate per gram</label>
+    <input type="number" id="currentRate" placeholder="ex) 200000">
   </div>
 
   <table id="goldTable">
@@ -19,72 +62,67 @@
       <tr>
         <th>일련번호</th>
         <th>type</th>
-        <th colspan="3">buying point</th>
-        <th colspan="2">current point</th>
-        <th>profit</th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th>rate per gram</th>
+        <th>buying rate per gram</th>
         <th>quantity</th>
-        <th>total rate</th>
-        <th>total rate</th>
-        <th></th>
-        <th></th>
+        <th>total rate(buying)</th>
+        <th>total rate(current)</th>
+        <th>profit</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td><td>On-line</td><td>167523.4</td><td>100</td><td>16752343</td><td class="current"></td><td></td><td class="profit"></td>
-      </tr>
-      <tr>
-        <td>2</td><td>Real</td><td>151200</td><td>75</td><td>11340000</td><td class="current"></td><td></td><td class="profit"></td>
-      </tr>
-      <tr>
-        <td>3</td><td>On-line</td><td>183310</td><td>84</td><td>15398040</td><td class="current"></td><td></td><td class="profit"></td>
-      </tr>
-      <tr>
-        <td>4</td><td>On-line</td><td>179120</td><td>11</td><td>1970320</td><td class="current"></td><td></td><td class="profit"></td>
-      </tr>
-      <tr>
-        <td>5</td><td>On-line</td><td>202978.1</td><td>32</td><td>6495300</td><td class="current"></td><td></td><td class="profit"></td>
-      </tr>
-      <tr>
-        <td>6</td><td>On-line</td><td>219229</td><td>123</td><td>26965167</td><td class="current"></td><td></td><td class="profit"></td>
-      </tr>
+      <tr><td>1</td><td>On-line</td><td>167523.4</td><td>100</td><td>16752343</td><td></td><td></td></tr>
+      <tr><td>2</td><td>Real</td><td>151200</td><td>75</td><td>11340000</td><td></td><td></td></tr>
+      <tr><td>3</td><td>On-line</td><td>183310</td><td>84</td><td>15398040</td><td></td><td></td></tr>
+      <tr><td>4</td><td>On-line</td><td>179120</td><td>11</td><td>1970320</td><td></td><td></td></tr>
+      <tr><td>5</td><td>On-line</td><td>202978.1</td><td>32</td><td>6495300</td><td></td><td></td></tr>
+      <tr><td>6</td><td>On-line</td><td>219229</td><td>123</td><td>26965167</td><td></td><td></td></tr>
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="7" style="text-align:right;"><strong>profit(sum)</strong></td>
+        <td colspan="6" style="text-align:right; font-weight:bold;">profit(sum) :</td>
         <td id="profitSum"></td>
       </tr>
     </tfoot>
   </table>
 
   <script>
-    function calculateAll() {
-      const rate = parseFloat(document.getElementById("currentRate").value);
-      if (!rate) return;
+    const rateInput = document.getElementById("currentRate");
+    const table = document.getElementById("goldTable");
+
+    rateInput.addEventListener("input", () => {
+      const rate = parseFloat(rateInput.value);
+      if (isNaN(rate)) {
+        clearTable();
+        return;
+      }
 
       let profitSum = 0;
-      const rows = document.querySelectorAll("#goldTable tbody tr");
 
-      rows.forEach(row => {
-        const buyingRate = parseFloat(row.children[2].textContent);
-        const quantity = parseFloat(row.children[3].textContent);
-        const buyingTotal = parseFloat(row.children[4].textContent);
+      // tbody는 1~6행까지 (index 1~6)
+      for (let i = 1; i <= 6; i++) {
+        const row = table.rows[i];
+        const quantity = parseFloat(row.cells[3].innerText);
+        const totalBuying = parseFloat(row.cells[4].innerText);
 
-        const currentTotal = rate * quantity;
-        const profit = currentTotal - buyingTotal;
+        const totalCurrent = rate * quantity;
+        const profit = totalCurrent - totalBuying;
 
-        row.querySelector(".current").textContent = Math.round(currentTotal).toLocaleString();
-        row.querySelector(".profit").textContent = Math.round(profit).toLocaleString();
+        row.cells[5].innerText = totalCurrent.toLocaleString();
+        row.cells[6].innerText = profit.toLocaleString();
 
         profitSum += profit;
-      });
+      }
 
-      document.getElementById("profitSum").textContent = Math.round(profitSum).toLocaleString();
+      document.getElementById("profitSum").innerText = profitSum.toLocaleString();
+    });
+
+    function clearTable() {
+      for (let i = 1; i <= 6; i++) {
+        const row = table.rows[i];
+        row.cells[5].innerText = "";
+        row.cells[6].innerText = "";
+      }
+      document.getElementById("profitSum").innerText = "";
     }
   </script>
 </body>

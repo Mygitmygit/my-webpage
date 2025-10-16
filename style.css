@@ -1,29 +1,36 @@
 body {
   font-family: "Segoe UI", sans-serif;
-  background: #fafafa;
-  margin: 40px;
   text-align: center;
+  margin: 40px;
+  background-color: #fafafa;
 }
 
-.container {
+h2 {
   margin-bottom: 20px;
 }
 
-label {
-  font-weight: bold;
-  margin-right: 10px;
+.input-box {
+  margin-bottom: 20px;
 }
 
 input {
   padding: 5px 10px;
-  font-size: 1rem;
+  font-size: 14px;
+}
+
+button {
+  padding: 5px 12px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 table {
-  border-collapse: collapse;
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
-  background: white;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
 th, td {
@@ -33,10 +40,10 @@ th, td {
 }
 
 th {
-  background-color: #f3f3f3;
+  background-color: #f0f0f0;
 }
 
 tfoot td {
+  background-color: #f9f9f9;
   font-weight: bold;
-  background: #f8f8f8;
 }
